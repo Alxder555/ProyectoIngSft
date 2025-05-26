@@ -1,5 +1,6 @@
 "use strict";
 import {
+  createUserService,
   deleteUserService,
   getUserService,
   getUsersService,
@@ -14,6 +15,37 @@ import {
   handleErrorServer,
   handleSuccess,
 } from "../handlers/responseHandlers.js";
+import { AppDataSource } from "../config/configDb.js";
+
+export async function createUser(req, res) {
+  try {
+    const userRepository = AppDataSource.getRepository("User");
+    const user = req.body;
+
+    if (!user) {
+      return res.status(400).json({
+        message: "No se proporcionó información necesaria del usuario",
+        data: null
+      });
+    }
+
+    const newUser = userRepository.create({
+      nombreCompleto: user.nombreCompleto,
+      email: user.email,
+      rut: user.rut, 
+      rol: user.rol,
+      password: user.password,
+    });
+
+    const userCreate = await userRepository.save(newUser);
+    res.status(201).json({
+      message: "Usuario creado correctamente",
+      data: userCreate
+    });
+  } catch (error) {
+    console.error("Error al crear el usuario:", error);
+  }
+}
 
 export async function getUser(req, res) {
   try {
