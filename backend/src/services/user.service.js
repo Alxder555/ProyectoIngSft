@@ -53,14 +53,12 @@ export async function updateUserService(query, body) {
 
     if (!userFound) return [null, "Usuario no encontrado"];
 
-    const existingUser = await userRepository.findOne({
+   const existingUser = await userRepository.findOne({
       where: [{ rut: body.rut }, { email: body.email }],
-    });
-
-    if (existingUser && existingUser.id !== userFound.id) {
+      });
+      if (existingUser && existingUser.id !== userFound.id) {
       return [null, "Ya existe un usuario con el mismo rut o email"];
     }
-
     if (body.password) {
       const matchPassword = await comparePassword(
         body.password,
