@@ -3,23 +3,37 @@ import { EntitySchema } from "typeorm";
 
 const MeetingSchema = new EntitySchema({
     name:"Meeting",
-    tableName:"Meetings",
+    tableName:"meetings",
     columns:{
     id: {
        type: "int",
        primary: true,
        generated: true,
     },
-    fechaInicio: {
+    horaInicio: {
         type:"varchar",
         nullable:false,
     },
-    fechaTermino: {
+    horaTermino: {
         type:"varchar",
         nullable:false,
+    },
+    fecha:{
+      type:"date",
+      nullable:false,
     },
     lugar: {
       type: "varchar",
+      length: 255,
+      nullable: false,
+    },
+    visibilidad: {
+      type: "int",
+      nullable:false,
+      
+    },
+    cuerpo:{
+      type:"varchar",
       length: 255,
       nullable: false,
     },

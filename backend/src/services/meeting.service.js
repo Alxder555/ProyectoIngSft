@@ -6,16 +6,19 @@ export async function createMeetingService(meeting) {
     try {
     const meetingRepository = AppDataSource.getRepository(Meeting);
 
-    const { fechaInicio, fechaTermino, lugar  } = meeting;
+    const { horaInicio, horaTermino, lugar, fecha, visibilidad, cuerpo  } = meeting;
 
     const createErrorMessage = (dataInfo, message) => ({
       dataInfo,
       message
     });
     const newMeeting = meetingRepository.create({
-      fechaInicio,
-      fechaTermino,
+      horaInicio,
+      horaTermino,
       lugar,
+      fecha,
+      visibilidad,
+      cuerpo,
     });
 
     await meetingRepository.save(newMeeting);
@@ -79,9 +82,12 @@ export async function updateMeetingService(query, body) {
     if (!meetingFound) return [null, "Reunion no encontrada"];
 
     const dataMeetingUpdate = {
-      fechaInicio: body.fechaInicio,
-      fechaTermino: body.fechaTermino,
+      horaInicio: body.fechaInicio,
+      horaTermino: body.fechaTermino,
       lugar: body.lugar,
+      fecha: body.fecha,
+      visibilidad: body.visibilidad,
+      cuerpo: body.cuerpo,
       updatedAt: new Date(),
     };
 
