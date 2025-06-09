@@ -25,17 +25,26 @@ export default new EntitySchema({
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
     },
+    //claves foraneas
+    reunionId: {
+      type: Number,
+      nullable: false,
+    },
+    creadorId: {
+      type: Number,
+      nullable: false,
+    },
   },
   relations: {
     reunion: {
       type: "many-to-one",
-      target: "Reunion",
+      target: "Meeting",
       joinColumn: { name: "reunionId" },
       nullable: false,
     },
     creador: {
       type: "many-to-one",
-      target: "Usuario",
+      target: "User",
       joinColumn: { name: "creadorId" },
       nullable: false,
     },

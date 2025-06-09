@@ -1,4 +1,4 @@
-
+import { AppDataSource } from "../config/configDb.js";
 import * as actaService from "../services/acta.service.js";
 import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
 import Acta from "../entity/acta.entity.js";
@@ -59,6 +59,58 @@ export async function actaPorId(req, res) {
         }
 
         handleSuccess(res, 200, "Acta encontrada", acta);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+//obtener todas las actas
+export async function obtenerTodasActas(req, res) {
+    try {
+        const actaRepo = AppDataSource.getRepository(Acta);
+        const actas = await actaRepo.find({ relations: ["reunion", "creador"] });
+
+        if (actas.length === 0) {
+            return handleSuccess(res, 204, "No hay actas registradas");
+        }
+
+        handleSuccess(res, 200, "Actas obtenidas exitosamente", actas);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+//borrar acta por id
+export async function borrarActaPorId(req, res) {
+    try {
+        const { id } = req.params;
+
+        const actaRepo = AppDataSource.getRepository(Acta);
+        const acta = await actaRepo.findOneBy({ id });
+        if (!acta) {
+            return handleErrorClient(res, 404, "Acta no encontrada");
+        }
+
+        await actaRepo.remove(acta);
+        handleSuccess(res, 200, "Acta eliminada exitosamente");
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+//borrar acta por reunionId
+export async function borrarActaPorReunionId(req, res) {
+    try {
+        const { reunionId } = req.params;
+
+        const actaRepo = AppDataSource.getRepository(Acta);
+        const acta = await actaRepo.findOne({ where: { reunionId } });
+        if (!acta) {
+            return handleErrorClient(res, 404, "Acta no encontrada para la reunión especificada");
+        }
+
+        await actaRepo.remove(acta);
+        handleSuccess(res, 200, "Acta eliminada exitosamente");
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
